@@ -3,7 +3,7 @@ const reverse = (string)=>{
 }
 
 const average = (array)=>{
-  return array.reduce((a,b)=>a+b,0)/array.length;
+  return array.length === 0 ? 0: array.reduce((a,b)=>a+b,0)/array.length;
 }
 
 module.exports = {
