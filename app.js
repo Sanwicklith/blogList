@@ -3,6 +3,8 @@ const app = express()
 const config = require('./utils/config')
 const logger = require('./utils/logger')
 const cors = require('cors')
+const middleware = require('./utils/middleware')
+
 const mongoose = require('mongoose')
 
 // middleware
