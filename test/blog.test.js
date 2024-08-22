@@ -112,6 +112,17 @@ test('when not given likes returns 0', async()=>{
   assert.strictEqual(blog.likes, 0)
 })
 
+test('blog without title or url is not added', async()=>{
+  const newBlog = {
+    
+    url: 'https://www.example.com', 
+  }
+  const response = await api.post('/api/blogs').send(newBlog).expect(400)
+  const blog = response.body
+  assert.strictEqual(blog.title, undefined)
+ 
+})
+
 test('dummy returns one', () => {
   const blogs = [];
 
