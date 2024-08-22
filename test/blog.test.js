@@ -101,6 +101,17 @@ test("a valid blog can be added", async()=>{
     assert(titles.includes('Blog Title'))
 })
 
+test('when not given likes returns 0', async()=>{
+  const newBlog = {
+    title: 'Blog Title',
+    author: 'Author',
+    url: 'https://www.example.com', 
+  }
+  const response = await api.post('/api/blogs').send(newBlog).expect(201)
+  const blog = response.body
+  assert.strictEqual(blog.likes, 0)
+})
+
 test('dummy returns one', () => {
   const blogs = [];
 
