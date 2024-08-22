@@ -1,11 +1,11 @@
-require('dotenv').config()
+require('dotenv').config();
 
-const MONGODB_URI = 'mongodb+srv://mbafin23:EY2PiHLd3t3RpS9Z@blog.j4yqeex.mongodb.net/?retryWrites=true&w=majority&appName=blog'
+const PORT = process.env.PORT;
 
-const PORT = 3003
+const MONGODB_URI =
+  process.env.NODE_ENV === 'test' ? process.env.TEST_MONGODB_URI : process.env.MONGODB_URI;
 
-
-module.exports={
+module.exports = {
   MONGODB_URI,
-  PORT
-}
+  PORT,
+};
