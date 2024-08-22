@@ -76,6 +76,31 @@ test('unique identifier is named id', async () => {
   assert(blog._id === undefined);
 });
 
+test("a valid blog can be added", async()=>{
+  const newBlog = {
+    title: 'Blog Title',
+    author: 'Author',
+    url: 'https://www.example.com',
+    likes: 10
+    }
+
+    const blogsAtStart = await api.get('/api/blogs')
+    const lengthOfBlog = blogsAtStart ? blogsAtStart.body.length : 0
+
+     await api.post('/api/blogs')
+     .send(newBlog)
+     .expect(201)
+     .expect('Content-Type', /application\/json/);
+    
+    const res = await api.get('/api/blogs')
+    const blogsAtEnd = res.body
+
+    const titles = blogsAtEnd.map(b => b.title)
+
+    assert.strictEqual(blogsAtEnd.length , lengthOfBlog + 1)
+    assert(titles.includes('Blog Title'))
+})
+
 test('dummy returns one', () => {
   const blogs = [];
 
