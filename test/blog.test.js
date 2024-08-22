@@ -65,6 +65,17 @@ test('blog is returned in json', async () => {
     .expect('Content-Type', /application\/json/);
 });
 
+test('unique identifier is named id', async () => {
+  const response = await api.get('/api/blogs');
+
+  // Ensure the first blog has an id property and not _id
+  const blog = response.body[0];
+
+  // Assert using strict equality
+  assert.strictEqual(typeof blog.id, 'string');
+  assert(blog._id === undefined);
+});
+
 test('dummy returns one', () => {
   const blogs = [];
 
