@@ -76,32 +76,32 @@ test('unique identifier is named id', async () => {
   assert(blog._id === undefined);
 });
 
-test("a valid blog can be added", async()=>{
+test("a valid blog can be added", async () => {
   const newBlog = {
     title: 'Blog Title',
     author: 'Author',
     url: 'https://www.example.com',
     likes: 10
-    }
+  }
 
-    const blogsAtStart = await api.get('/api/blogs')
-    const lengthOfBlog = blogsAtStart ? blogsAtStart.body.length : 0
+  const blogsAtStart = await api.get('/api/blogs')
+  const lengthOfBlog = blogsAtStart ? blogsAtStart.body.length : 0
 
-     await api.post('/api/blogs')
-     .send(newBlog)
-     .expect(201)
-     .expect('Content-Type', /application\/json/);
-    
-    const res = await api.get('/api/blogs')
-    const blogsAtEnd = res.body
+  await api.post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+  
+  const res = await api.get('/api/blogs')
+  const blogsAtEnd = res.body
 
-    const titles = blogsAtEnd.map(b => b.title)
+  const titles = blogsAtEnd.map(b => b.title)
 
-    assert.strictEqual(blogsAtEnd.length , lengthOfBlog + 1)
-    assert(titles.includes('Blog Title'))
-})
+  assert.strictEqual(blogsAtEnd.length, lengthOfBlog + 1)
+  assert(titles.includes('Blog Title'))
+});
 
-test('when not given likes returns 0', async()=>{
+test('when not given likes returns 0', async () => {
   const newBlog = {
     title: 'Blog Title',
     author: 'Author',
@@ -110,18 +110,40 @@ test('when not given likes returns 0', async()=>{
   const response = await api.post('/api/blogs').send(newBlog).expect(201)
   const blog = response.body
   assert.strictEqual(blog.likes, 0)
-})
+});
 
-test('blog without title or url is not added', async()=>{
+test('blog without title or url is not added', async () => {
   const newBlog = {
-    
     url: 'https://www.example.com', 
   }
   const response = await api.post('/api/blogs').send(newBlog).expect(400)
   const blog = response.body
   assert.strictEqual(blog.title, undefined)
- 
-})
+});
+
+test('delete blog if given id is in blogList', async () => {
+  // Get the list of blogs and take the first one
+  const res = await api.get('/api/blogs');
+  console.log('Initial blogs:', res.body); // Debugging line
+  const blogToDelete = res.body[0];
+  const id = blogToDelete.id;
+
+  // Delete the blog by its id
+  const deleteResponse = await api.delete(`/api/blogs/${id}`);
+  console.log('Delete response status:', deleteResponse.status); // Debugging line
+  assert.strictEqual(deleteResponse.status, 204); // Using assert instead of expect
+
+  // Get the updated list of blogs after deletion
+  const res2 = await api.get('/api/blogs');
+  console.log('Updated blogs:', res2.body); // Debugging line
+  const ids = res2.body.map(b => b.id);
+
+  // Ensure the blog count decreased by 1
+  assert.strictEqual(res2.body.length, res.body.length - 1);
+
+  // Check that the deleted blog's id is not in the new list
+  assert.ok(!ids.includes(id)); // Convert expect to assert
+});
 
 test('dummy returns one', () => {
   const blogs = [];
@@ -161,13 +183,8 @@ describe('total likes', () => {
     const result = listHelper.favoriteBlog(blogs);
     assert.deepStrictEqual(result, blogs[2]);
   });
-
-  // test("favorite blog", ()=>{
-  //   const result = listHelper.mostBlogs(blogs)
-  //   assert.deepStrictEqual(result, {author : blogs[2].author, blogs : blogs[2].blogs})
-  // })
 });
 
-after(async ()=>{
-  await mongoose.connection.close()
-})
+after(async () => {
+  await mongoose.connection.close();
+});

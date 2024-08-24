@@ -19,18 +19,14 @@ const errorHandler = (err, req, res, next) => {
     return res.status(400).send({ error: 'invalid data' });
   } else if (err.name === 'JsonWebTokenError') {
     return res.status(401).send({ error: 'invalid token' });
-  } else if (err.name === 'RangeError') {
-    return res.status(400).send({ error: 'invalid input' });
-  } else if (err.name === 'TypeError') {
+  } else if (err.name === 'RangeError' || err.name === 'TypeError') {
     return res.status(400).send({ error: 'invalid input' });
   } else if (err.name === 'MongoError') {
     return res.status(400).send({ error: 'database error' });
-  } else if (err.name === 'TypeError') {
-    return res.status(400).send({ error: 'database error' });
   } else {
-    logger.error(err.message);
+    logger.error(err.message); // Log the error
     return res.status(500).send({ error: 'something went wrong, try again later' });
   }
-  next(err)
 };
+
 module.exports = { requestLogger, unknownEndpoint, errorHandler };
