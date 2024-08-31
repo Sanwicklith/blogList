@@ -26,3 +26,8 @@ coverage/
 # Ignore temporary files
 *.tmp
 *.temp
+
+# Ensure .env is ignored
+.env
+.env.local
+.env.*.local
