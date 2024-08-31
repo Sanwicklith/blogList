@@ -24,7 +24,7 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name === 'MongoError') {
     return res.status(400).send({ error: 'database error' });
   } else {
-    logger.error(err.message); // Log the error
+    logger.error(err.message);
     return res.status(500).send({ error: 'something went wrong, try again later' });
   }
 };
