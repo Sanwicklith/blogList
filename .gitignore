@@ -1,33 +1,32 @@
+# Dependencies
 node_modules
+package-lock.json
+yarn.lock
+
+# Environment variables
 .env
-# Ignore build output
+.env.local
+.env.*
+
+# Build output
 dist/
 
-# Ignore IDE and editor files
+# IDE and editor files
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# Ignore OS generated files
+# OS generated files
 .DS_Store
 Thumbs.db
 
-# Ignore log files
+# Logs and temporary files
 *.log
-
-# Ignore package-lock files
-package-lock.json
-yarn.lock
-
-# Ignore coverage reports
-coverage/
-
-# Ignore temporary files
 *.tmp
 *.temp
 
-# Ensure .env is ignored
-.env
-.env.local
-.env.*.local
+# Test coverage
+coverage/
+
+# ... existing code ...
