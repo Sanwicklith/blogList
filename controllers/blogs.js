@@ -11,11 +11,7 @@
 const blogsRouter = require('express').Router();
 const Blog = require('../models/blog');
 const User = require('../models/user');
-<<<<<<< HEAD
-const middleware = require('../utils/middleware');
-=======
 const jwt = require('jsonwebtoken');
->>>>>>> 3a541ffcf1a666bc81090e3c5676f38a896a04e6
 
 const getTokenFrom = request => {
   const authorization = request.get('authorization');
@@ -32,15 +28,6 @@ blogsRouter.get('/', async (request, response) => {
 });
 
 // POST a new blog
-<<<<<<< HEAD
-blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
-  const body = request.body;
-  const user = request.user;
-
-  if (!user) {
-    return response.status(401).json({ error: 'token missing or invalid' });
-  }
-=======
 blogsRouter.post('/', async (request, response) => {
   const body = request.body;
   const token = getTokenFrom(request);
@@ -49,7 +36,6 @@ blogsRouter.post('/', async (request, response) => {
     return response.status(401).json({ error: 'token missing or invalid' });
   }
   const user = await User.findById(decodedToken.id);
->>>>>>> 3a541ffcf1a666bc81090e3c5676f38a896a04e6
 
   const blog = new Blog({
     title: body.title,
@@ -67,17 +53,6 @@ blogsRouter.post('/', async (request, response) => {
 });
 
 // DELETE a blog by ID
-<<<<<<< HEAD
-blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
-  const blog = await Blog.findById(request.params.id);
-  if (!blog) {
-    return response.status(404).json({ error: 'blog not found' });
-  }
-
-  const user = request.user;
-  if (!user || blog.user.toString() !== user._id.toString()) {
-    return response.status(401).json({ error: 'token missing or invalid' });
-=======
 blogsRouter.delete('/:id', async (request, response) => {
   const token = getTokenFrom(request);
   const decodedToken = jwt.verify(token, process.env.SECRET);
@@ -92,7 +67,6 @@ blogsRouter.delete('/:id', async (request, response) => {
 
   if (blog.user.toString() !== decodedToken.id.toString()) {
     return response.status(403).json({ error: 'only the creator can delete blogs' });
->>>>>>> 3a541ffcf1a666bc81090e3c5676f38a896a04e6
   }
 
   await Blog.findByIdAndRemove(request.params.id);
